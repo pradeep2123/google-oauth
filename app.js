@@ -15,7 +15,7 @@ const GoogleStrategy = require('passport-google-oauth').OAuthStrategy;
 
 // importing files
 var url = require('./url');
-mongoose.connect('mongodb://localhost:27017/spritle',{useNewUrlParser: true });
+mongoose.connect('mongodb://localhost:27017/sprite',{useNewUrlParser: true });
 var app = express();
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
