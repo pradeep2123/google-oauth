@@ -32,6 +32,7 @@ var transporter = nodemailer.createTransport({
 
 const freshDesk = (req,res,next) =>{
     var freshDesk = new Freshdesk('https://kumarapypradee.freshdesk.com', 'RXYr8tpQirxRxayOvJa');
+   
     freshDesk.createTicket({
         name: 'ticket',
         email: 'test@test.com',
@@ -52,7 +53,7 @@ const freshDesk = (req,res,next) =>{
 
 const sessionChecker = (req, res, next) => {
     if (req.cookies.token1) {
-        jwt.verify(req.cookies.token1, config.JWT_SECRET, function(error, decoded){
+        jwt.verify(req.cookies.token1, JWT_SECRET, function(error, decoded){
             if(error){
                 return res.render('signin', {error:"FIRST SIGNIN"}) 
             }
@@ -70,7 +71,7 @@ const sessionChecker = (req, res, next) => {
 }
 
 const getSignup= (req,res,next)=>{
-    if(req.cookies){
+    if(req.cookies.token1){
         return res.redirect('/user/home');
     }
     res.render('signup');
@@ -103,7 +104,6 @@ const signup =(req, res, next) => {
     
     User.findOne({email:newUser.email}, (error,user)=>{
         if(user){
-            console.log("already registered");
             return res.render('signup',{error:"User already register, please check your email and login it"});
         }
         else if(!user){
@@ -119,28 +119,24 @@ const signup =(req, res, next) => {
             newUser.password = hash;
             newUser.save(function(error,user_save){
                 if(error){
-                    console.log(error);
                     return res.render('signup',{error:"Please try again!!!"})
                 }
 
                 if(user_save){
                     if(_.isEmpty(user_save)) {
-                        logger.info("ERROR RETRIEVED IN USER");
                         return res.render('signup',{error:'please try again !!!!'}) 
                     }
                     var  mailOptions = {
                         to: user_save.email, 
                         subject: 'Login Credentials',
-                        text: 'Hello,\n' + 'Please click the link to verify and login to continue services.' +'\n'+'\n http://localhost:2018/verification/'+newUser.token
+                        text: 'Hello,\n' + 'Please click the link to verify and login to continue services.' +'\n'+'\n http://localhost:2018/user/verification/'+newUser.token
                     };
                     transporter.sendMail(mailOptions, function (error,user_email) {
                         if(error)
                         {
-                        console.log(error)
                         return res.render('signup',{error:'Try again, email has not sent for verification!!!'})
                         }  
                         else if(user_email)  
-                        console.log(newUser.token);     
                         return res.render('signup',{user:'Email has sent,Please verify it'})
                     })
                 }        
@@ -151,7 +147,6 @@ const signup =(req, res, next) => {
 
 const userVerified = function(req,res,next){
     let token = req.params.token || req.query.token;
-    console.log(token);
     if(!token){
         return res.render('signup',{error:"please verify the email"});
     }
@@ -168,7 +163,6 @@ const userVerified = function(req,res,next){
         user_verify.active = true;
         user_verify.save(function(error,user_verifed){
             if(error){
-                console.log(error);
                 return res.render('signup',{error:"please visit your email"})
             }
             else{
@@ -191,7 +185,6 @@ const signin =(req,res,next)=>{
             res.render('signin',{error:"incorrect email or password"});
         }
         else if(user){
-            console.log(user)
             if(bcrypt.compareSync(password,user.password))
             {
                 if(user.active == true)
@@ -218,7 +211,6 @@ const signout = (req,res,next)=>{
     return res.redirect('/user/signin');
     }
     res.clearCookie('connect.sid');
-    // console.log(res.clearCookie('connect.sid'))
     return res.redirect('/user/signin');
 }
 
