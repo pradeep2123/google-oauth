@@ -40,8 +40,6 @@ module.exports=function(passport){
                             throw err;
                         return done(null, newUser);
                     })
-                    console.log("working");
-                    console.log(profile);
                 }
             });
         });
