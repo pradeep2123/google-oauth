@@ -5,10 +5,18 @@
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
 
+     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+          <a class="navbar-brand mr-auto mr-lg-0" href="/user/home">Spritle</a>
+          <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+            {{!-- <span class="navbar-toggler-icon"></span> --}}
+          </button> <br>
+    </nav><br><br>
+
     <title>Signin</title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
 
    
   </head>
@@ -48,10 +56,10 @@
               <button class="btn btn-primary" type="submit" >SignIn</button>
            </div> 
             <div class="col-md-4">
-                <a href="/auth/google/callback" class="btn btn-danger"><span class="fa fa-google-plus"></span>Google</a>
+                <a href="/auth/google/" class="btn btn-danger"><span class="fa fa-google-plus"></span>Google</a>
             </div>
             <div class="col-md-2">
-                <a id="signin"href="/user/signup">Signup</a>
+                <a id="signin"href="/user/create">Signup</a>
             </div>
           </div>
       </center>
