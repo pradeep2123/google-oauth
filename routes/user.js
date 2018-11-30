@@ -6,7 +6,7 @@ const crypto = require('crypto')
 const _ = require('underscore');
 const mongoose = require('mongoose');       
 const bodyParser = require('body-parser');
-// const cookieParser= require('cookie-parser');
+const cookieParser= require('cookie-parser');
 const jwt = require('jsonwebtoken');
 var fs= require('fs')
 const mongodb = require('mongodb')
@@ -14,18 +14,15 @@ const exphbs  = require('express-handlebars');
 const Handlebars = require('handlebars');
 const nodemailer = require('nodemailer');
 const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth').OAuthStrategy;
-
 const User = require('../models/user').User
 const Auth = require('../routes/auth')
 const JWT_SECRET= 'Gli7dFsW-J_82cO-Ed_s_ODeDpAFASPD-ge3qLuI6qT6krM3KjOtTsPysR2PkiP9yUdiJrTLwpeNtEaDhwyQmybGTsUTZ1bxZnZ5bWF9_nW7Tfex6lJxQi1Vwq68RTfzie6xa_N7muxISpLCYd8g_c_zOJcmyjkCdZAW5z0LFBZB9icGmJuOMv-VldgroKxJeIh88jEBWWR3eGGU9ZzprnzH6Wi_GONq2q0DELDzDAjmJDelfK1hBOY2vaSfa0lIlZEhLe2YsFwBAMtuqqBnhT3rxGBWkxq2QhN6Wp2bvuhaYC8-_eoKBBeEW31qz2Z6VDbrtuFZXOXZ9iBs9NCAUQ';
-// var token = '';
 
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-           user: '******************',
-           pass: '******************'
+           user: 'test.rigorsolutions@gmail.com',
+           pass: 'Rigor@123'
        }
 });
 
@@ -49,8 +46,10 @@ const sessionChecker = (req, res, next) => {
     }
 }
 
-
 const getSignup= (req,res,next)=>{
+    if(req.cookies){
+        return res.redirect('/user/home');
+    }
     res.render('signup');
 }
 const createSignup = (req,res,next)=>{
@@ -58,7 +57,12 @@ const createSignup = (req,res,next)=>{
 }
 
 const getSignin = (req,res,next)=>{
-    return res.render('signin');
+    var msg = req.query.msg;
+    if(req.cookies.token1){
+        return res.render('dashboard');
+    }
+  
+    return res.render('signin',{msg:msg});
 }
 const signup =(req, res, next) => { 
 
@@ -68,6 +72,7 @@ const signup =(req, res, next) => {
         email         : req.body.email || req.query.email || req.params.email,
         password      : req.body.password || req.query.password || req.params.password,
         mobile_number : req.body.mobile_number,
+        active : false,
         token         :crypto.randomBytes(16).toString('hex')
     })
     var passwordtest= /^([a-zA-Z0-9@*#]{8,15})$/;
@@ -101,16 +106,14 @@ const signup =(req, res, next) => {
                         return res.render('signup',{error:'please try again !!!!'}) 
                     }
                     var  mailOptions = {
-                        from: '**************',//
                         to: user_save.email, 
                         subject: 'Login Credentials',
-                        text: 'Hello,\n' + 'Please click the link to verify and login to continue services.' +'\n'+'\n http://localhost:2018/confirmation' +newUser.token
+                        text: 'Hello,\n' + 'Please click the link to verify and login to continue services.' +'\n'+'\n http://localhost:2018/verification/'+newUser.token
                     };
                     transporter.sendMail(mailOptions, function (error,user_email) {
                         if(error)
                         {
                         console.log(error)
-                        logger.info("ERROR RETRIEVED IN USER");
                         return res.render('signup',{error:'Try again, email has not sent for verification!!!'})
                         }  
                         else if(user_email)  
@@ -156,7 +159,6 @@ const userVerified = function(req,res,next){
 const signin =(req,res,next)=>{
     var email= req.body.email || req.query.email || req.params.email ;
     var password = req.body.password || req.params.password || req.query.password;
-  
 
     User.findOne({ email: email}, function(error,user){
         if(error){
@@ -172,9 +174,9 @@ const signin =(req,res,next)=>{
                 if(user.active == true)
                 {                 
                     console.log(user.active)
-                    var token1= jwt.sign({_id:user._id}, JWT_SECRET, {expiresIn: (24*60*60) });
-                    res.cookie('token',token1);
-                    return res.render('dashboard')
+                    var token= jwt.sign({_id:user._id}, JWT_SECRET, {expiresIn: (24*60*60) });
+                    res.cookie('token1',token);
+                    return res.render('dashboard',{user:user})
                 }
                 return res.render('signin',{error:"Please visit your email and verify"});
             }
@@ -187,30 +189,25 @@ const signin =(req,res,next)=>{
     })
 }
 
-
 const signout = (req,res,next)=>{
-    if (req.cookies.token) {
-        res.clearCookie('token');
-        res.redirect('/user/signin');
+    if(req.cookies.token1){
+    res.clearCookie('token1');
+    return res.redirect('/user/signin');
     }
-    res.clearCookie('token');
-    res.redirect('/user/signin');
+    res.clearCookie('connect.sid');
+    // console.log(res.clearCookie('connect.sid'))
+    return res.redirect('/user/signin');
 }
 
 const getHome = (req,res,next)=>{
-    var user_id= req.user.id;
-    User.findById(user_id)
-    .exec(function(error,new_user){
-        if(error){
-            var msg = "Please Signin!!!";
-            return res.redirect('/user/signin?msg='+error)
-        }
-        else{
-            return res.render('dashboard',{user:new_user});
-        }
-    })
+    if(req.cookies){
+    return res.render('dashboard');
+    }
+    else{
+        var msg = "Please Signin!!!";
+        return res.redirect('/user/signin?msg='+msg)
+    }
 }
-
 module.exports={
     signup:signup,
     getSignin:getSignin,
