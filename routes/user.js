@@ -14,6 +14,10 @@ const exphbs  = require('express-handlebars');
 const Handlebars = require('handlebars');
 const nodemailer = require('nodemailer');
 const passport = require('passport');
+const unirest = require('unirest');
+var Freshdesk = require('freshdesk-api')
+
+
 const User = require('../models/user').User
 const Auth = require('../routes/auth')
 const JWT_SECRET= 'Gli7dFsW-J_82cO-Ed_s_ODeDpAFASPD-ge3qLuI6qT6krM3KjOtTsPysR2PkiP9yUdiJrTLwpeNtEaDhwyQmybGTsUTZ1bxZnZ5bWF9_nW7Tfex6lJxQi1Vwq68RTfzie6xa_N7muxISpLCYd8g_c_zOJcmyjkCdZAW5z0LFBZB9icGmJuOMv-VldgroKxJeIh88jEBWWR3eGGU9ZzprnzH6Wi_GONq2q0DELDzDAjmJDelfK1hBOY2vaSfa0lIlZEhLe2YsFwBAMtuqqBnhT3rxGBWkxq2QhN6Wp2bvuhaYC8-_eoKBBeEW31qz2Z6VDbrtuFZXOXZ9iBs9NCAUQ';
@@ -21,11 +25,30 @@ const JWT_SECRET= 'Gli7dFsW-J_82cO-Ed_s_ODeDpAFASPD-ge3qLuI6qT6krM3KjOtTsPysR2Pk
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-           user: '******',//enter email
-           pass: '******' // enter password
+           user: 'test.rigorsolutions@gmail.com',
+           pass: 'Rigor@123'
        }
 });
 
+const freshDesk = (req,res,next) =>{
+    var freshDesk = new Freshdesk('https://kumarapypradee.freshdesk.com', 'RXYr8tpQirxRxayOvJa');
+    freshDesk.createTicket({
+        name: 'ticket',
+        email: 'test@test.com',
+        subject: 'test sub',
+        description: 'test description',
+        status: 2,
+        priority: 1
+    }, function (error, data) {
+        if(error){
+            return res.render('dashboard',{error:"NOT AUTHORIZED"})
+        }
+        else{
+            return res.render('dashboard',{message:"SUCCESFFULY AUTHORIZED"});
+        }
+    })
+    
+}
 
 const sessionChecker = (req, res, next) => {
     if (req.cookies.token1) {
@@ -217,6 +240,7 @@ module.exports={
     signout:signout,
     signin:signin,
     getHome:getHome,
+    freshDesk:freshDesk,
     sessionChecker:sessionChecker
 }
 
