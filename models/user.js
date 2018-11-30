@@ -5,18 +5,18 @@ const mongodb = require('mongodb');
 var Schema = mongoose.Schema; 
 
 var userSchema = new Schema({
- first_name  : {type:String, required:true},
- last_name   :{ type    : String,required : true},
- email             :{ type    : String,required : true, index:false},
- password     : { type : String,required : true},
- mobile_number:{ type:Number,required : true },
- active:{type:Boolean,default: false},
- token:{type:String, required:true},
+ first_name  : {type:String},
+ last_name   :{ type    : String},
+ email             :{ type    : String},
+ password     : { type : String},
+ mobile_number:{ type:Number},
+ active:{type:Boolean},
+ token:{type:String},
  google: {
        id: { type: String },
        google_token: { type: String },
-       email: { type: String },
-       email:{type:String}
+       name:{type:String},
+       email: { type: String }
 },
  created_at : {type:Date, default:Date.now},
  });
