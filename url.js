@@ -1,10 +1,13 @@
 const express = require('express')
 const User= require('./routes/user');
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth').OAuthStrategy;
-const passportGoogle = require('./routes/passport');
+var passport = require('passport');
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var configAuth = require('./routes/auth');
+
 
 const app = express.Router(); 
+
+require('./routes/google')(app,passport);
 
 
 
@@ -13,18 +16,12 @@ app.get('/user/create',User.getSignup);
 app.get('/user/signin',User.getSignin);
 app.post('/user/signin',User.signin);
 app.get('/verification/:token',User.userVerified);
-app.get('/*',User.createSignup);
+app.get('/',User.createSignup);
 app.get('/user/signout',User.signout);
-app.get('/home',User.sessionChecker,User.getHome);
+app.get('/user/home',User.getHome);
 
-// app.get('/auth/google/callback', 
-// passport.authenticate('google', { successRedirect: '/home', failureRedirect: '/' }));
+app.get('/freshdesk/auth/callback',User.freshDesk);
 
-	app.get('/auth/google', passport.authenticate('google', {scope: ['profile', 'email']}));
-
-	app.get('/auth/google/callback', 
-	  passport.authenticate('google', { successRedirect: '/profile',
-	                                      failureRedirect: '/' }));
 
 
 module.exports = app;
