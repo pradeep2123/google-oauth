@@ -1,17 +1,28 @@
-var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var passport = require('passport');
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+
 var User            = require('../models/user').User
-var configAuth = require('../routes/auth').googleAuth;
+var configAuth = require('../routes/auth');
 
-const Passport_google = function(req,res,next){
+module.exports=function(passport){
 
+    passport.serializeUser(function(user, done) {
+        done(null, user.id);
+    });
+
+    // used to deserialize the user
+    passport.deserializeUser(function(id, done) {
+        User.findById(id, function(err, user) {
+            done(err, user);
+        });
+    });
 
     passport.use(new GoogleStrategy({
     clientID: configAuth.googleAuth.clientID,
     clientSecret: configAuth.googleAuth.clientSecret,
     callbackURL: configAuth.googleAuth.callbackURL
   },
-  function(accessToken, refreshToken, profile, done) {
+    function(accessToken, refreshToken, profile, done) {
         process.nextTick(function(){
             User.findOne({'google.id': profile.id}, function(err, user){
                 if(err)
@@ -24,18 +35,21 @@ const Passport_google = function(req,res,next){
                     newUser.google.google_token = accessToken;
                     newUser.google.name = profile.displayName;
                     newUser.google.email = profile.emails[0].value;
-
                     newUser.save(function(err){
                         if(err)
                             throw err;
                         return done(null, newUser);
                     })
+                    console.log("working");
                     console.log(profile);
                 }
             });
         });
     }
     
-));
+    ));
 }
- module.exports = Passport_google
+
+
+
+
