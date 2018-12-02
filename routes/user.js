@@ -210,9 +210,9 @@ const signout = (req,res,next)=>{
     res.clearCookie('token1');
     return res.redirect('/user/signin');
     }
-    res.clearCookie('connect.sid');
-    return res.redirect('/user/signin');
-}
+    req.logout();
+    return res.redirect('https://accounts.google.com/logout')   
+    // return res.redirect('/user/signin');
 
 const getHome = (req,res,next)=>{
     if(req.cookies){
