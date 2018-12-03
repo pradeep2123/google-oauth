@@ -1,27 +1,47 @@
-<html lang="en"><head>
+<html lang="en">
+    <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
     <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
-
-
     <title>Signin Template for Bootstrap</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
-
-    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
-          <a class="navbar-brand mr-auto mr-lg-0">Spritle</a>
+      <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+          <a class="navbar-brand mr-auto mr-lg-0" href="/user/home">Spritle</a>
           <a href="/user/signout" class="btn pull-right">Signout</a>
           <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
-          </button> <br><br><br>
+          </button> 
     </nav>
-    </head>
-    <body>
+    </head> <br><br><br><br>
+    <!-- Bootstrap core CSS -->
 
-     
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <body class="container" style="margin-bottom:50px">
+         {{#if error}}
+      <div class="alert alert-danger">
+        <strong>{{error}}</strong>
+      </div>
+    {{/if}}
+    {{!-- {{#if user}}
+      <div class="alert alert-success">
+        <strong>{{user}}</strong>
+      </div>
+    {{/if}} --}}
+     {{#if message}}
+      <div class="alert alert-success">
+        <center><strong>{{message}}</strong></center>
+      </div>
+    {{/if}}
+
+
+          <h3><label>Hi, Welcomes You {{#if user}} <capitalize>{{user.first_name}} {{user.last_name}}</capitalize> {{/if}}
+    {{#if google_user}} <capitalize>{{google_user.displayName}} {{google_user.displayName}}</capitalize> {{/if}}
+    </label></h3>
+
+    <h4>FreshDesk Developer</h4>
+        <a href="/freshdesk/auth/callback" class="btn btn-primary"><span class="fa fa-freshdesk"></span>Authorize</a>
 
 
 
