@@ -1,0 +1,39 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "bcrypt-node": "^0.1.0",
+    "bcrypt-nodejs": "^0.0.3",
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.3",
+    "crypto": "^1.0.1",
+    "express": "^4.16.4",
+    "express-handlebars": "^3.0.0",
+    "express-session": "^1.15.6",
+    "freshdesk": "^1.1.1",
+    "freshdesk-api": "^2.5.0",
+    "freshdesk-nodejs": "^1.0.0",
+    "handlebars": "^4.0.12",
+    "js": "^0.1.0",
+    "jsonwebtoken": "^8.4.0",
+    "moment": "^2.22.2",
+    "mongodb": "^3.1.10",
+    "mongoose": "^5.3.14",
+    "node-freshdesk-api": "^0.1.8",
+    "nodemailer": "^4.7.0",
+    "passport": "^0.4.0",
+    "passport-google-oauth": "^1.0.0",
+    "path": "^0.12.7",
+    "swag": "^0.7.0",
+    "underscore": "^1.9.1",
+    "unirest": "^0.5.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
