@@ -25,8 +25,8 @@ const JWT_SECRET= 'Gli7dFsW-J_82cO-Ed_s_ODeDpAFASPD-ge3qLuI6qT6krM3KjOtTsPysR2Pk
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-           user: 'test.rigorsolutions@gmail.com',
-           pass: 'Rigor@123'
+           user: '***********',
+           pass: '***********'
        }
 });
 
